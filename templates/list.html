@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoRX Logs</title>
+    <style>
+        body{
+            font-family: sans-serif;
+        }
+        .log_list td{
+            padding-right:15px;
+        }
+    </style>
+</head>
+
+<h1>AutoRX Log</h1>
+<table class="log_list">
+    <tr>
+        <th>Time (UTC)</th>
+        <th>Age</th>
+        <th>Min Alt</th>
+        <th>Max Alt</th>
+        <th>Habhub</th>
+    </tr>
+
+    {% for l in list %}
+        <tr>
+            <td>{{ l.date.strftime('%Y-%m-%d %H:%M:%S ') }}</td>
+            <td>{{ l.date_delta.days }} days, {{ "%.1f"|format(l.date_delta.seconds / 60 / 60) }} hours ago</td>
+            <td>{{ "{:,.0f}".format(l.stats.minimum_altitude) }}</td>
+            <td>{{ "{:,.0f}".format(l.stats.maximum_altitude) }}</td>
+            <td><a href="{{ l.habhub_url }}">{{ l.balloon_id }}</a></td>
+        </tr>
+    {% endfor %}
+</table>
