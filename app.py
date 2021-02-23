@@ -51,11 +51,11 @@ def parse_filename(filename):
 def parse_file(filename):
     print(filename)
     output = utils.read_telemetry_csv('%s/%s' % (settings.log_path, filename))
-    stats = utils.get_stats(output)
-    print(stats)
-    return stats
-    # print(output)
-    # quit()
+    if output:
+        stats = utils.get_stats(output)
+        return stats
+    else:
+        return None
 
 @app.route('/')
 def log_list():
