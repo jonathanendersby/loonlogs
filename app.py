@@ -11,7 +11,7 @@ import models
 
 
 app = Flask(__name__)
-app.debug = True
+app.debug = settings.debug
 
 
 @app.route('/')
@@ -22,7 +22,6 @@ def log_list():
                            vehicles=vehicles,
                            sondehub_url_prefix=settings.sondehub_url_prefix,
                            system=system)
-
 
 if __name__ == '__main__':
     app.run()

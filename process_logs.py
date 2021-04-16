@@ -38,8 +38,6 @@ for log in logs:
         # Check if we have this vehicle in the database already
         if filename_obj.vehicle_id not in vehicle_ids:
             # Not in the database, lets add it.
-
-
             v = models.Vehicle(
                 vehicle_id=filename_obj.vehicle_id,
                 serial_number=filename_obj.serial_number,
@@ -80,8 +78,6 @@ for log in logs:
             # Nothing to do
             print('Old data, doing nothing.')
             pass
-
-
 
 # Update the system statistics table
 system = models.SystemStatistic.select().first()
