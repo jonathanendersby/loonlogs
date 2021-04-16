@@ -131,14 +131,14 @@ def read_telemetry_csv(filename_obj,
             if add_date:
 
                 base_date = filename_obj.parsed_date
-                # print('TESTING HERE:', filename_obj.filename)
-                # print('Fields:', _fields)
-                # print('Field:', _fields[datetime_field])
-                # print('Len:', len(_fields[datetime_field]))
-                # print('Type:', type(_fields[datetime_field]))
-                # print('First two:', _fields[datetime_field][0:2])
-                # print('Int:', int(str(_fields[datetime_field])[0:2]))
-                # print('-----')
+                print('TESTING HERE:', filename_obj.filename)
+                print('Fields:', _fields)
+                print('Field:', _fields[datetime_field])
+                print('Len:', len(_fields[datetime_field]))
+                print('Type:', type(_fields[datetime_field]))
+                print('First two:', _fields[datetime_field][0:2])
+                print('Int:', int(str(_fields[datetime_field])[0:2]))
+                print('-----')
 
                 hour = int(_fields[datetime_field][0:2])
                 minute = int(_fields[datetime_field][3:5])
