@@ -43,8 +43,8 @@
     {% for v in vehicles %}
         <tr>
             <td><a href="{{ sondehub_url_prefix }}{{ v.serial_number }}">{{ v.vehicle_id }}</a></td>
-            <td>{{ v.date_first_heard.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-            <td>{{ v.date_last_heard }}</td>
+            <td>{% if v.date_first_heard %}{{ v.date_first_heard.strftime('%Y-%m-%d %H:%M:%S') }}{% endif %}</td>
+            <td>{% if v.date_last_heard %}{{ v.date_last_heard.strftime('%Y-%m-%d %H:%M:%S') }}{% endif %}</td>
             <td>{{ "{:,.2f}".format(v.min_altitude) }}</td>
             <td>{{ "{:,.2f}".format(v.max_altitude) }}</td>
             <td>{{ "{:,.2f}".format(v.min_temperature) }}</td>
