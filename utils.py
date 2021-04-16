@@ -1,8 +1,78 @@
+from datetime import datetime, timedelta
 from dateutil.parser import *
+import pytz
 import traceback
 
+import settings
 
-def read_telemetry_csv(filename,
+
+
+class AutoRXLogFile:
+    filename = None
+    parsed_date = None
+    date_delta = None
+    vehicle_id = None
+    serial_number = None
+
+    def __str__(self):
+        return 'AutoRXLogFile: %s - %s' % (self.parsed_date, self.vehicle_id)
+
+
+class AutoRXLogFileLine:
+    date = None
+    frame = None
+    latitude = None
+    longitude = None
+    altitude = None
+    temperature = None
+
+
+class AutoRXLogFileStats:
+    date_first_heard = None
+    date_last_heard = None
+    first_latitude = None
+    first_longitude = None
+    last_latitude = None
+    last_longitude = None
+    min_altitude = None
+    max_altitude = None
+    min_temp = None
+    max_temp = None
+    first_frame = None
+    last_frame = None
+
+
+
+def parse_filename(filename):
+    # Returns an instance of AutoRXLogFile object
+    # 20210201-233710_IMET54-55068418_IMET5_402000_sonde.log
+    try:
+        y = int(filename[0:4])
+        m = int(filename[4:6])
+        d = int(filename[6:8])
+        h = int(filename[9:11])
+        minute = int(filename[11:13])
+        s = int(filename[13:15])
+        id = filename[16:31]
+
+        # https://tracker.sondehub.org/?sondehub=1#!mt=osm&mz=11&qm=All&f=RS_IMET54-55068437&q=RS_IMET54-55068437
+        # url = 'https://tracker.sondehub.org/?sondehub=1#!mt=osm&mz=11&qm=All&q=RS_%s' % id
+
+        parsed_date = datetime(year=y, month=m, day=d, hour=h, minute=minute, second=s)
+
+    except ValueError:
+        return False
+
+    obj = AutoRXLogFile()
+    obj.filename = filename
+    obj.parsed_date = parsed_date
+    obj.date_delta = datetime.utcnow() - parsed_date
+    obj.vehicle_id = id
+    obj.serial_number = id.split('-')[1]
+    return obj
+
+
+def read_telemetry_csv(filename_obj,
                        datetime_field=0,
                        frame_field=2,
                        latitude_field=3,
@@ -26,52 +96,129 @@ def read_telemetry_csv(filename,
         ...
     ]
     '''
-
     output = []
 
-    f = open(filename,'r')
+    f = open('%s/%s' % (settings.log_path, filename_obj.filename), 'r', encoding='UTF-8')
+
+    add_date = None  # Does this log file not include the actual date. (Early versions of IMET54)
+    first_hour = None  # Used to determine whether the hours have rolled over to the next day.
 
     for line in f:
-        try:
+        if 1 == 1:
             # Split line by comma delimiters.
             _fields = line.split(delimiter)
+
+            # Trim any weird whitespace
+            _fields[datetime_field] = _fields[datetime_field].strip('\x00')
 
             if _fields[0] == 'timestamp':
                 # First line in file - header line.
                 continue
 
-            # Attempt to parse fields.
-            _datetime = parse(_fields[datetime_field])
-            _frame = float(_fields[frame_field])
-            _latitude = float(_fields[latitude_field])
-            _longitude = float(_fields[longitude_field])
-            _altitude = float(_fields[altitude_field])
-            _temperature = float(_fields[temperature_field])
+            else:
+                # Hacky check to see if the log file has a full date or just the time.
+                if add_date is None:
+                    if line[2:3] == ':':
+                        add_date = True
+                        first_hour = int(line[0:2])
+                    else:
+                        add_date = False
 
-            output.append([_datetime, _frame, _longitude, _altitude, _temperature])
-        except:
-            traceback.print_exc()
-            return None
+            # Attempt to parse fields.
+            line_obj = AutoRXLogFileLine()
+
+            # Do we need to add the date to the log file.
+            if add_date:
+
+                base_date = filename_obj.parsed_date
+                # print('TESTING HERE:', filename_obj.filename)
+                # print('Fields:', _fields)
+                # print('Field:', _fields[datetime_field])
+                # print('Len:', len(_fields[datetime_field]))
+                # print('Type:', type(_fields[datetime_field]))
+                # print('First two:', _fields[datetime_field][0:2])
+                # print('Int:', int(str(_fields[datetime_field])[0:2]))
+                # print('-----')
+
+                hour = int(_fields[datetime_field][0:2])
+                minute = int(_fields[datetime_field][3:5])
+                second = int(_fields[datetime_field][6:8])
+                # print('done...')
+
+                if hour < first_hour:
+                    # We've rolled over to the next day.
+                    base_date = base_date + timedelta(hours=24)
+
+                date_corrected = base_date.replace(hour=hour, minute=minute, second=second)
+
+            else:
+                # We can use the date as it is logged in the file.
+                date_corrected = parse(_fields[datetime_field])
+
+            # We remove timezone info because we're SQLite can't do timezones properly yet.
+            line_obj.date = date_corrected.replace(tzinfo=None)
+            line_obj.frame_number = int(_fields[frame_field])
+            line_obj.latitude = float(_fields[latitude_field])
+            line_obj.longitude = float(_fields[longitude_field])
+            line_obj.altitude = float(_fields[altitude_field])
+            line_obj.temperature = float(_fields[temperature_field])
+
+            output.append(line_obj)
+
+        # except Exception as e:
+        #     print('EXCEPTION!!!!')
+        #     print(str(e))
+        #     traceback.print_exc()
+        #     return None
 
     f.close()
 
     return output
 
 
+# def parse_file(filename):
+#     # print('Parsing', filename)
+#     output =
+#     return output
+
+
 def get_stats(data):
-    # print(data)
-    # quit()
-    max_alt = 0
-    min_alt = 9999999999
+    min_alt = None
+    max_alt = None
 
-    for d in data:
-        alt = d[3]
-        if alt > max_alt:
-            max_alt = alt
-        if alt < min_alt:
-            min_alt = alt
+    min_temp = None
+    max_temp = None
 
-    return({
-        'minimum_altitude': min_alt,
-        'maximum_altitude': max_alt,
-    })
+    if data is not None:
+        print('We have data...')
+        for d in data:
+            alt = d.altitude
+            if max_alt is None or alt > max_alt:
+                max_alt = alt
+            if min_alt is None or alt < min_alt:
+                min_alt = alt
+
+            temp = d.temperature
+            if max_temp is None or temp > max_temp:
+                max_temp = temp
+            if min_temp is None or temp < min_temp:
+                min_temp = temp
+
+        s = AutoRXLogFileStats()
+        s.date_first_heard = data[0].date
+        s.date_last_heard = data[-1].date
+        s.first_latitude = data[0].latitude
+        s.first_longitude = data[0].longitude
+        s.last_latitude = data[-1].latitude
+        s.last_longitude = data[-1].longitude
+        s.min_altitude = min_alt
+        s.max_altitude = max_alt
+        s.min_temp = min_temp
+        s.max_temp = max_temp
+
+    else:
+        print('We have no data...')
+        # No data, lets return an empty object.
+        s = AutoRXLogFileStats()
+
+    return s

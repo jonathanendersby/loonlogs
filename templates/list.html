@@ -8,29 +8,48 @@
         body{
             font-family: sans-serif;
         }
+        h1{
+            margin-bottom:0px;
+        }
+        .log_list th{
+            text-align: left;
+        }
         .log_list td{
-            padding-right:15px;
+            padding-right:40px;
         }
     </style>
 </head>
 
 <h1>AutoRX Log</h1>
+<small>Logs last processed at {{ system.date_last_complete_processing.strftime('%Y-%m-%d %H:%M:%S') }} UTC</small>
+<br/>
+<br/>
 <table class="log_list">
     <tr>
-        <th>Time (UTC)</th>
-        <th>Age</th>
+        <th>Vechicle ID</th>
+        <th>First Heard</th>
+        <th>Last Heard</th>
         <th>Min Alt</th>
         <th>Max Alt</th>
-        <th>Habhub</th>
+        <th>Min Temp</th>
+        <th>Max Temp</th>
     </tr>
 
-    {% for l in list %}
+    {% for v in vehicles %}
         <tr>
-            <td>{{ l.date.strftime('%Y-%m-%d %H:%M:%S ') }}</td>
-            <td>{{ l.date_delta.days }} days, {{ "%.1f"|format(l.date_delta.seconds / 60 / 60) }} hours ago</td>
-            <td>{{ "{:,.0f}".format(l.stats.minimum_altitude) }}</td>
-            <td>{{ "{:,.0f}".format(l.stats.maximum_altitude) }}</td>
-            <td><a href="{{ l.habhub_url }}">{{ l.balloon_id }}</a></td>
+            <td><a href="{{ sondehub_url_prefix }}{{ v.serial_number }}">{{ v.vehicle_id }}</a></td>
+            <td>{{ v.date_first_heard.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>{{ v.date_last_heard }}</td>
+            <td>{{ "{:,.2f}".format(v.min_altitude) }}</td>
+            <td>{{ "{:,.2f}".format(v.max_altitude) }}</td>
+            <td>{{ "{:,.2f}".format(v.min_temperature) }}</td>
+            <td>{{ "{:,.2f}".format(v.max_temperature) }}</td>
+
+{#            <td>{{ l.date.strftime('%Y-%m-%d %H:%M:%S ') }}</td>#}
+{#            <td>{{ l.date_delta.days }} days, {{ "%.1f"|format(l.date_delta.seconds / 60 / 60) }} hours ago</td>#}
+{#            <td>{{ "{:,.0f}".format(l.stats.minimum_altitude) }}</td>#}
+{#            <td>{{ "{:,.0f}".format(l.stats.maximum_altitude) }}</td>#}
+{#            <td><a href="{{ l.habhub_url }}">{{ l.balloon_id }}</a></td>#}
         </tr>
     {% endfor %}
 </table>
