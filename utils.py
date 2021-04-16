@@ -104,7 +104,7 @@ def read_telemetry_csv(filename_obj,
     first_hour = None  # Used to determine whether the hours have rolled over to the next day.
 
     for line in f:
-        if 1 == 1:
+        try:
             # Split line by comma delimiters.
             _fields = line.split(delimiter)
 
@@ -165,11 +165,11 @@ def read_telemetry_csv(filename_obj,
 
             output.append(line_obj)
 
-        # except Exception as e:
-        #     print('EXCEPTION!!!!')
-        #     print(str(e))
-        #     traceback.print_exc()
-        #     return None
+        except Exception as e:
+            print('EXCEPTION!!!!')
+            print(str(e))
+            traceback.print_exc()
+            return None
 
     f.close()
 
