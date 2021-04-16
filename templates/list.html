@@ -21,7 +21,12 @@
 </head>
 
 <h1>AutoRX Log</h1>
-<small>Logs last processed at {{ system.date_last_complete_processing.strftime('%Y-%m-%d %H:%M:%S') }} UTC</small>
+{% if system %}
+    <small>Logs last processed at {{ system.date_last_complete_processing.strftime('%Y-%m-%d %H:%M:%S') }} UTC</small>
+{% else %}
+    <small>No logs have been processed. Run process_logs.py to populate the database</small>
+{% endif %}
+
 <br/>
 <br/>
 <table class="log_list">
