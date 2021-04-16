@@ -1,5 +1,7 @@
 from peewee import *
+import os
 
+print(os. getcwd())
 db = SqliteDatabase('loonlogs.db')
 
 
