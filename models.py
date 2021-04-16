@@ -1,7 +1,7 @@
 from peewee import *
 import pathlib
 
-db = SqliteDatabase(str(pathlib.Path().absolute()) + '/loonlogs.db')
+db = SqliteDatabase(str(pathlib.Path(__file__).parent.absolute()) + '/loonlogs.db')
 
 
 class SystemStatistic(Model):
