@@ -34,6 +34,8 @@
         <th>Vechicle ID</th>
         <th>First Heard</th>
         <th>Last Heard</th>
+        <th>Duration</th>
+        <th>Distance</th>
         <th>Min Alt</th>
         <th>Max Alt</th>
         <th>Min Temp</th>
@@ -43,10 +45,12 @@
     {% for v in vehicles %}
         <tr>
             <td><a href="{{ sondehub_url_prefix }}{{ v.serial_number }}">{{ v.vehicle_id }}</a></td>
-            <td>{% if v.date_first_heard %}{{ v.date_first_heard.strftime('%Y-%m-%d %H:%M:%S') }}{% endif %}</td>
-            <td>{% if v.date_last_heard %}{{ v.date_last_heard.strftime('%Y-%m-%d %H:%M:%S') }}{% endif %}</td>
-            <td>{% if v.min_altitude %}{{ "{:,.2f}".format(v.min_altitude) }}{% endif %}</td>
-            <td>{% if v.max_altitude %}{{ "{:,.2f}".format(v.max_altitude) }}{% endif %}</td>
+            <td>{% if v.date_first_heard %}{{ v.date_first_heard.strftime('%Y-%m-%d %H:%M') }} {% endif %}</td>
+            <td>{% if v.date_last_heard %}{{ v.date_last_heard.strftime('%Y-%m-%d %H:%M') }} ({{ v.date_last_heard|timeago }}){% endif %}</td>
+            <td>{% if v.flight_time_minutes %}{{ "{:,.0f}".format(v.flight_time_minutes) }} mins{% endif %}</td>
+            <td>{% if v.flight_distance_km %}{{ "{:,.2f}".format(v.flight_distance_km) }} km{% endif %}</td>
+            <td>{% if v.min_altitude %}{{ "{:,.0f}".format(v.min_altitude) }}{% endif %}</td>
+            <td>{% if v.max_altitude %}{{ "{:,.0f}".format(v.max_altitude) }}{% endif %}</td>
             <td>{% if v.min_temperature %}{{ "{:,.2f}".format(v.min_temperature) }}{% endif %}</td>
             <td>{% if v.max_temperature %}{{ "{:,.2f}".format(v.max_temperature) }}{% endif %}</td>
         </tr>

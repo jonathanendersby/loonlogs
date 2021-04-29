@@ -70,6 +70,7 @@ for log in logs:
 
             v.min_temperature = stats.min_temp
             v.max_temperature = stats.max_temp
+
             v.save()
             print('Vehicle updated')
 
