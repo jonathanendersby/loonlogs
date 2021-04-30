@@ -1,12 +1,7 @@
 from flask import Flask
-import os
 from datetime import datetime
 from flask import render_template
 import settings
-import pytz
-import utils
-from jinja2 import Environment, FileSystemLoader
-import os
 import models
 import timeago
 import haversine

@@ -1,8 +1,6 @@
 import os
 import datetime
 import pytz
-from dateutil.parser import parse
-
 import utils
 import settings
 import models

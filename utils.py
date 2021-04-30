@@ -1,10 +1,8 @@
 from datetime import datetime, timedelta
 from dateutil.parser import *
-import pytz
 import traceback
 
 import settings
-
 
 
 class AutoRXLogFile:
