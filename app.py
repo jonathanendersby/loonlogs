@@ -10,12 +10,18 @@ app = Flask(__name__)
 app.debug = settings.debug
 
 @app.template_filter('timeago')
-def fromnow(date):
+def handler(date):
     return timeago.format(date, datetime.now())
 
 
 @app.route('/')
 def log_list():
+
+    # Check if the database has the required tables and create if not.
+    tables = models.db.get_tables()
+    if len(tables) == 0:
+        models.create_tables()
+
     vehicles = models.Vehicle.select().order_by(models.Vehicle.date_first_heard.desc())
     system = models.SystemStatistic.select().first()
 
@@ -32,6 +38,7 @@ def log_list():
                            vehicles=vehicles,
                            sondehub_url_prefix=settings.sondehub_url_prefix,
                            system=system)
+
 
 if __name__ == '__main__':
     app.run()
