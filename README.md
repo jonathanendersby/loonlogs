@@ -2,6 +2,10 @@
 
 Loonlogs processes and displays your AutoRX Logs with a quick summary of the information.
 
+![alt text](https://github.com/jonathanendersby/loonlogs/blob/3f9cb7ed6af6c8bda49af8f186c0356e6831823b/screenshot.png?raw=true)
+
+
+
 To learn more about Radiosonde and AutoRX visit https://github.com/projecthorus/radiosonde_auto_rx
 
 # Theory of Operation and Setup
