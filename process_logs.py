@@ -5,6 +5,11 @@ import utils
 import settings
 import models
 
+# Check if the tables exist and create them if needed
+tables = models.db.get_tables()
+if len(tables) == 0:
+    models.create_tables()
+
 # Get the list of lof files in the logs folder
 logs = os.listdir(settings.log_path)
 
@@ -71,7 +76,6 @@ for log in logs:
 
             v.save()
             print('Vehicle updated')
-
 
         else:
             # Nothing to do
