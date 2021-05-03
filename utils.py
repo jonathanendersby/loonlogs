@@ -73,9 +73,6 @@ def parse_filename(filename):
         second = int(timestamp[13:15])
         parsed_date = datetime(year=y, month=m, day=d, hour=h, minute=minute, second=second)
 
-        # https://tracker.sondehub.org/?sondehub=1#!mt=osm&mz=11&qm=All&f=RS_IMET54-55068437&q=RS_IMET54-55068437
-        # url = 'https://tracker.sondehub.org/?sondehub=1#!mt=osm&mz=11&qm=All&q=RS_%s' % id
-
     except ValueError:
         return False
 
@@ -196,12 +193,6 @@ def read_telemetry_csv(filename_obj,
     return output
 
 
-# def parse_file(filename):
-#     # print('Parsing', filename)
-#     output =
-#     return output
-
-
 def get_stats(data):
     min_alt = None
     max_alt = None
@@ -243,3 +234,11 @@ def get_stats(data):
         s = AutoRXLogFileStats()
 
     return s
+
+
+def get_tracker_url(latitude, longitude, vehicle_id):
+    base = settings.sondehub_tracker_url
+    base = base.replace('<VEHICLE_ID>', str(vehicle_id))
+    base = base.replace('<LATITUDE>', str(latitude))
+    base = base.replace('<LONGITUDE>', str(longitude))
+    return base

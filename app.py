@@ -5,6 +5,7 @@ import settings
 import models
 import timeago
 import haversine
+import utils
 
 app = Flask(__name__)
 app.debug = settings.debug
@@ -26,6 +27,8 @@ def log_list():
     system = models.SystemStatistic.select().first()
 
     for vehicle in vehicles:
+        vehicle.show_tracker_link = False
+
         if vehicle.first_latitude and vehicle.first_longitude and vehicle.last_latitude and vehicle.last_longitude:
             l1 = (vehicle.first_latitude, vehicle.first_longitude)
             l2 = (vehicle.last_latitude, vehicle.last_longitude)
@@ -33,6 +36,10 @@ def log_list():
 
         if vehicle.date_last_heard and vehicle.date_last_heard:
             vehicle.flight_time_minutes = (vehicle.date_last_heard - vehicle.date_first_heard).total_seconds() / 60
+
+            if (datetime.utcnow() - vehicle.date_last_heard).total_seconds() < 24*60*60:
+                vehicle.show_tracker_link = True
+                vehicle.tracker_url = utils.get_tracker_url(vehicle.last_latitude, vehicle.last_longitude, vehicle.vehicle_id)
 
     return render_template('list.html',
                            vehicles=vehicles,

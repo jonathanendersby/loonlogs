@@ -50,8 +50,12 @@
     {% for v in vehicles %}
         <tr>
             <td>{% if v.vehicle_type %}{{ v.vehicle_type }}{% endif %}</td>
-            <td><a href="{{ sondehub_url_prefix }}{{ v.vehicle_id }}">{{ v.vehicle_id }}</a></td>
-
+            <td>
+                <a href="{{ sondehub_url_prefix }}{{ v.vehicle_id }}">{{ v.vehicle_id }}</a>
+                {% if v.show_tracker_link %}
+                    &nbsp;<a style="font-size: 90%" href="{{ v.tracker_url }}">Live</a>
+                {% endif %}
+            </td>
             <td>{% if v.date_first_heard %}{{ v.date_first_heard.strftime('%Y-%m-%d %H:%M') }} {% endif %}</td>
             <td>{% if v.date_last_heard %}{{ v.date_last_heard.strftime('%Y-%m-%d %H:%M') }} ({{ v.date_last_heard|timeago }}){% endif %}</td>
             <td>{% if v.flight_time_minutes %}{{ "{:,.0f}".format(v.flight_time_minutes) }} mins{% endif %}</td>

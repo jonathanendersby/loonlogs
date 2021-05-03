@@ -1,4 +1,4 @@
 debug = False
 log_path = '../radiosonde_auto_rx/auto_rx/log'
 sondehub_url_prefix = 'https://sondehub.org/card/'
-sondehub_live_url_prefix = 'http://sondehub.org/'
+sondehub_tracker_url = '''https://tracker.sondehub.org/?sondehub=1#!mt=osm&mz=11&qm=1_day&f=<VEHICLE_ID>&q=<VEHICLE_ID>&mc=<LATITUDE>,<LONGITUDE>'''
