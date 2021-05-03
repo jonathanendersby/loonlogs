@@ -219,10 +219,11 @@ def get_stats(data):
                 min_alt = alt
 
             temp = d.temperature
-            if max_temp is None or temp > max_temp:
-                max_temp = temp
-            if min_temp is None or temp < min_temp:
-                min_temp = temp
+            if temp > -272:  # Ignore 0 Kelvin (-273 C) because obviously that's not real.
+                if max_temp is None or temp > max_temp:
+                    max_temp = temp
+                if min_temp is None or temp < min_temp:
+                    min_temp = temp
 
         s = AutoRXLogFileStats()
         s.date_first_heard = data[0].date
