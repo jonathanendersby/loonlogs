@@ -24,6 +24,7 @@ for vehicle in vehicles:
 
 # Loop through the files
 for log in logs:
+    print('>>>', log)
 
     # Attempt to parse the filename
     filename_obj = utils.parse_filename(log)
@@ -43,7 +44,7 @@ for log in logs:
             # Not in the database, lets add it.
             v = models.Vehicle(
                 vehicle_id=filename_obj.vehicle_id,
-                serial_number=filename_obj.serial_number,
+                vehicle_type=filename_obj.vehicle_type,
                 filename=filename_obj.filename,
                 date_created=datetime.datetime.now(tz=pytz.UTC)
             ).save()

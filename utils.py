@@ -10,7 +10,7 @@ class AutoRXLogFile:
     parsed_date = None
     date_delta = None
     vehicle_id = None
-    serial_number = None
+    vehicle_type = None
 
     def __str__(self):
         return 'AutoRXLogFile: %s - %s' % (self.parsed_date, self.vehicle_id)
@@ -40,23 +40,41 @@ class AutoRXLogFileStats:
     last_frame = None
 
 
-
 def parse_filename(filename):
     # Returns an instance of AutoRXLogFile object
+
+    # We expect:
+    # <timestamp>_<serial number>_<vehicle type>_<frequency>_sonde.log
     # 20210201-233710_IMET54-55068418_IMET5_402000_sonde.log
+    # 20210423-112535_S2540110_RS41-SG_401500_sonde.log
+
+    if not filename.endswith('_sonde.log'):
+        # Doesn't look like a log file, return False
+        return False
+
+    parts = filename.split('_')
+
+    timestamp = parts[0]
+    vehicle_id = parts[1]
+
+    if vehicle_id.startswith(('IMET5', 'IMET4',)):
+        vehicle_id_parts = vehicle_id.split('-')
+        vehicle_id = vehicle_id_parts[1]
+
+    vehicle_type = parts[2]
+    freq = parts[3]
+
     try:
-        y = int(filename[0:4])
-        m = int(filename[4:6])
-        d = int(filename[6:8])
-        h = int(filename[9:11])
-        minute = int(filename[11:13])
-        s = int(filename[13:15])
-        id = filename[16:31]
+        y = int(timestamp[0:4])
+        m = int(timestamp[4:6])
+        d = int(timestamp[6:8])
+        h = int(timestamp[9:11])
+        minute = int(timestamp[11:13])
+        second = int(timestamp[13:15])
+        parsed_date = datetime(year=y, month=m, day=d, hour=h, minute=minute, second=second)
 
         # https://tracker.sondehub.org/?sondehub=1#!mt=osm&mz=11&qm=All&f=RS_IMET54-55068437&q=RS_IMET54-55068437
         # url = 'https://tracker.sondehub.org/?sondehub=1#!mt=osm&mz=11&qm=All&q=RS_%s' % id
-
-        parsed_date = datetime(year=y, month=m, day=d, hour=h, minute=minute, second=s)
 
     except ValueError:
         return False
@@ -65,9 +83,13 @@ def parse_filename(filename):
     obj.filename = filename
     obj.parsed_date = parsed_date
     obj.date_delta = datetime.utcnow() - parsed_date
-    obj.vehicle_id = id
-    obj.serial_number = id.split('-')[1]
+    obj.vehicle_id = vehicle_id
+    obj.vehicle_type = vehicle_type
+
+    print('-----------------------\n        LOGFILEOBJECT')
+    print(obj)
     return obj
+
 
 
 def read_telemetry_csv(filename_obj,

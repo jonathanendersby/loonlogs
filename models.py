@@ -13,7 +13,7 @@ class SystemStatistic(Model):
 
 class Vehicle(Model):
     vehicle_id = CharField()
-    serial_number = CharField()
+    vehicle_type = CharField()
     filename = CharField()
     date_created = DateTimeField()
 
