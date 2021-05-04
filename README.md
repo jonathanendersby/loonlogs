@@ -14,7 +14,7 @@ LoonLogs is a Flask application paired with a standalone Python script (`process
 ## Setup
 * First ```cp settings.py.example settings.py``` and set your paths correctly. 
 * `pip install -r requirements.txt` to install all the dependencies.
-* Test Flask by running `python3 app.py`
+* Test Flask by running `python3 app.py` - Assuming no error messages you can test by going to http://127.0.0.1:5000/ 
 * Test log processor by running `python3 process_logs.py`
 
 If all is working correctly you should see it parsing some logs and your loonlogs.db file should increase in size.
