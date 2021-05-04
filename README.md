@@ -11,13 +11,19 @@ To learn more about Radiosonde and AutoRX visit https://github.com/projecthorus/
 # Theory of Operation and Setup
 LoonLogs is a Flask application paired with a standalone Python script (`process_logs.py`) that processes auto_rx log files and populates a SQLite Database.
 
-First ```cp settings.py.example settings.py``` and set your paths correctly. 
+## Setup
+* First ```cp settings.py.example settings.py``` and set your paths correctly. 
+* `pip install -r requirements.txt` to install all the dependencies.
+* Test Flask by running `python3 app.py`
+* Test log processor by running `python3 process_logs.py`
 
-`pip install -r requirements.txt` to install all the dependencies. 
+If all is working correctly you should see it parsing some logs and your loonlogs.db file should increase in size.
 
-On the first page render Flask should create a `loonlogs.db` file and two tables:
+## How it works
+Once running the software should create a SQLite `loonlogs.db` file and two tables:
 * `vehicles` (which stores summary data for each vehicle)
 * `systemstatistic` (which stores information about the last time process_logs ran.)
+* Once Flask is running you should be able to visit http://127.0.0.1:5000/ and see your vehicle logs. 
 
 It is recommended that you install the Flask app using SystemD (see the example service file below)
 
