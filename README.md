@@ -13,6 +13,8 @@ LoonLogs is a Flask application paired with a standalone Python script (`process
 
 First ```cp settings.py.example settings.py``` and set your paths correctly. 
 
+`pip install -r requirements.txt` to install all the dependencies. 
+
 On the first page render Flask should create a `loonlogs.db` file and two tables:
 * `vehicles` (which stores summary data for each vehicle)
 * `systemstatistic` (which stores information about the last time process_logs ran.)
