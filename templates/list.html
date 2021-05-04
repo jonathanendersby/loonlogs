@@ -11,6 +11,9 @@
         h1{
             margin-bottom:0px;
         }
+        h1 a{
+            text-decoration: none;
+        }
         .log_list th{
             text-align: left;
         }
@@ -24,7 +27,7 @@
     </style>
 </head>
 
-<h1>AutoRX Log</h1>
+<h1>AutoRX Log{% if auto_rx_url %}&nbsp;<a href="{{ auto_rx_url}}">*</a>{% endif %}</h1>
 {% if system %}
     <small>Logs last processed at {{ system.date_last_complete_processing.strftime('%Y-%m-%d %H:%M:%S') }} UTC</small>
 {% else %}
