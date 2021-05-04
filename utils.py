@@ -2,7 +2,11 @@ from datetime import datetime, timedelta
 from dateutil.parser import *
 import traceback
 
-import settings
+try:
+    import settings
+    no_settings_file = False
+except ImportError:
+    no_settings_file = True
 
 
 class AutoRXLogFile:

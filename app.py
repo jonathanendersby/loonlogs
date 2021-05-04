@@ -1,14 +1,23 @@
 from flask import Flask
 from datetime import datetime
 from flask import render_template
-import settings
-import models
+
 import timeago
 import haversine
-import utils
 
 app = Flask(__name__)
-app.debug = settings.debug
+
+try:
+    import settings
+    no_settings_file = False
+    app.debug = settings.debug
+except ImportError:
+    no_settings_file = True
+    app.debug = True
+
+import utils
+import models
+
 
 @app.template_filter('timeago')
 def handler(date):
@@ -17,6 +26,9 @@ def handler(date):
 
 @app.route('/')
 def log_list():
+
+    if no_settings_file:
+        return render_template('errors.html', errors=['No settings file (settings.py) importable.'])
 
     # Check if the database has the required tables and create if not.
     tables = models.db.get_tables()

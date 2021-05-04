@@ -2,7 +2,13 @@ import os
 import datetime
 import pytz
 import utils
-import settings
+
+try:
+    import settings
+
+except ImportError:
+    quit('Error: settings.py is missing. Please make a copy settings.py.example in order to continue.')
+
 import models
 
 # Check if the tables exist and create them if needed
