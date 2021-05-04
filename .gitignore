@@ -133,3 +133,4 @@ dmypy.json
 *.db
 *.db_backup
 settings.py
+_settings.py
