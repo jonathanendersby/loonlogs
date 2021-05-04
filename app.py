@@ -49,7 +49,7 @@ def log_list():
         if vehicle.date_last_heard and vehicle.date_last_heard:
             vehicle.flight_time_minutes = (vehicle.date_last_heard - vehicle.date_first_heard).total_seconds() / 60
 
-            if (datetime.utcnow() - vehicle.date_last_heard).total_seconds() < 24*60*60:
+            if (datetime.utcnow() - vehicle.date_last_heard).total_seconds() < 60*60:  # Have we heard this in the last hour.
                 vehicle.show_tracker_link = True
                 vehicle.tracker_url = utils.get_tracker_url(vehicle.last_latitude, vehicle.last_longitude, vehicle.vehicle_id)
 
