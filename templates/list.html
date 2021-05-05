@@ -27,7 +27,7 @@
     </style>
 </head>
 
-<h1>AutoRX Log{% if auto_rx_url %}&nbsp;<a href="{{ auto_rx_url}}">*</a>{% endif %}</h1>
+<h1>AutoRX Log{% if auto_rx_url %}&nbsp;<a title="Link to AutoRX" href="{{ auto_rx_url}}">*</a>{% endif %}</h1>
 {% if system %}
     <small>Logs last processed at {{ system.date_last_complete_processing.strftime('%Y-%m-%d %H:%M:%S') }} UTC</small>
 {% else %}
@@ -56,7 +56,7 @@
             <td>
                 <a href="{{ sondehub_url_prefix }}{{ v.vehicle_id }}">{{ v.vehicle_id }}</a>
                 {% if v.show_tracker_link %}
-                    &nbsp;<a style="font-size: 90%" href="{{ v.tracker_url }}">T</a>
+                    &nbsp;<a title="Link to Live Sondehub Tracker for this Vehicle" style="font-size: 90%" href="{{ v.tracker_url }}">T</a>
                 {% endif %}
             </td>
             <td>{% if v.date_first_heard %}{{ v.date_first_heard.strftime('%Y-%m-%d %H:%M') }} {% endif %}</td>
