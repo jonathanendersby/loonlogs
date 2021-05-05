@@ -21,7 +21,7 @@ import models
 
 @app.template_filter('timeago')
 def handler(date):
-    return timeago.format(date, datetime.now())
+    return timeago.format(date, datetime.utcnow())
 
 
 @app.route('/')
